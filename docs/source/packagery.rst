@@ -1,0 +1,6 @@
+packagery
+=========
+
+.. automodule:: packagery
+    :members:
+

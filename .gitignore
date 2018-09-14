@@ -89,6 +89,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+venv3/
+venv-doc/
 
 # Spyder project settings
 .spyderproject
@@ -102,3 +104,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# IDE
+.idea
