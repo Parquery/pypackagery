@@ -16,6 +16,10 @@ pypackagery
 .. image:: https://img.shields.io/pypi/pyversions/pypackagery.svg
     :alt: PyPI - Python Version
 
+.. image:: https://readthedocs.org/projects/pypackagery/badge/?version=latest
+    :target: https://pypackagery.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 Pypackagery packages a subset of a monorepo and determine the dependent packages.
 
 Given a root directory of a Python code base, a list of Python files (from that code base) and a target directory,
@@ -40,6 +44,38 @@ should be specified *only* in the ``requirements.txt``.
 
 Please do not forget to add the ``#egg`` fragment to URLs and files in ``requirements.txt`` so that the name of the
 package can be uniquely resolved when joining ``module_to_requirement.tsv`` and ``requirements.txt``.
+
+Related Projects
+================
+
+* https://github.com/pantsbuild/pex -- a library tool for generating PEX (Python EXecutable) files. It packages all the
+  files in the virtual environment including all the requirements. This works for small code bases and light
+  requirements which are not frequently re-used among the components in the code base. However, when the requirements
+  are heavy (such as OpenCV or numpy) and frequently re-used in the code base, it is a waste of bandwidth and disk space
+  to package them repeatedly for each executable independently.
+
+* https://www.pantsbuild.org/, https://buckbuild.com/ and https://github.com/linkedin/pygradle are build systems that
+  can produce PEX files (with all the problems mentioned above). We considered using them and writing a plug-in to
+  achieve the same goal as pypackagery. Finally, we decided for a separate tool since these build systems are not
+  yet supported natively by IDEs (such as Pycharm) and actually break the expected Python development work flow.
+
+* https://blog.shazam.com/python-microlibs-5be9461ad979 presents a microlib approach where a monorepo is packaged in
+  separate pip packages. While we find the idea interesting, it adds an administration overhead since every library
+  needs to live in a separate package thus making bigger refactorings tedious and error-prone (*e.g.* are the
+  requirements updated correctly and are dependency conflicts reported early?). We found it easiest to have a global
+  list of the requirements (with modules mapped to requirements), so that a sole ``pip3 install -r requirements.txt``
+  would notify us of the conflicts.
+
+  If you wanted to work only on part of the code base, and do no want to install all the requirements, you can use
+  pypackagery to determine the required subset and install only those requirements that you need.
+
+  Since we deploy often on third-party sites, we also found it difficult to secure our deployments. Namely, packaging
+  the code base into microlibs practically implies that we need to give the remote machine access to our private pypi
+  repository. In case that we only want to deploy the subset of the code base, granting access to all packages would
+  unnecessarily open up a potential security hole. With pypackagery, we deploy only the files that are actually
+  used while the third-party dependencies are separately installed on the remote instance from a subset of requirements
+  ``subrequirements.txt`` with ``pip3 install -r subrequirements.txt``.
+
 
 Usage
 =====
