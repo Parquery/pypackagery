@@ -135,9 +135,9 @@ This gives us a verbose, human-readable output like:
 
     Local dependencies:
     pipeline/out/__init__.py
-    pqry/__init__.py
-    pqry/logging.py
-    pqry/proc.py
+    common/__init__.py
+    common/logging.py
+    common/proc.py
 
 If we want to get the same output in JSON, we need to call:
 
@@ -165,9 +165,9 @@ which gives us a JSON-encoded dependency graph:
       },
       "rel_paths": [
         "pipeline/out/__init__.py",
-        "pqry/__init__.py",
-        "pqry/logging.py",
-        "pqry/proc.py"
+        "common/__init__.py",
+        "common/logging.py",
+        "common/proc.py"
       ],
       "unresolved_modules": []
     }
@@ -203,9 +203,9 @@ which gives us:
     pipeline/__init__.py
     pipeline/input/receivery.py
     pipeline/input/snapshotry.py
-    pqry/__init__.py
-    pqry/img.py
-    pqry/logging.py
+    common/__init__.py
+    common/img.py
+    common/logging.py
     protoed/__init__.py
     protoed/pipeline_pb2.py
 
