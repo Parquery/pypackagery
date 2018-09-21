@@ -86,9 +86,9 @@ As already mentioned, the requirements are expected to follow Pip format
 of the code base. The mapping from modules to requirements is expected in ``module_to_requirement.tsv`` also at the root
 of the code base.
 
-Assume that the code base lives in ``~/workspace/pqry/production/src/py``.
+Assume that the code base lives in ``~/workspace/some-project``.
 
-Here is an excerpt from ``~/workspace/pqry/production/src/py/requirements.txt``:
+Here is an excerpt from ``~/workspace/some-project/requirements.txt``:
 
 .. code-block::
 
@@ -96,7 +96,7 @@ Here is an excerpt from ``~/workspace/pqry/production/src/py/requirements.txt``:
     pytz==2018.5
     pyzmq==17.1.2
 
-And here is an excerpt from ``~/workspace/pqry/production/src/py/module_to_requirement.tsv``
+And here is an excerpt from ``~/workspace/some-project/module_to_requirement.tsv``
 (mind that it's tab separated):
 
 .. code-block::
@@ -111,7 +111,7 @@ And here is an excerpt from ``~/workspace/pqry/production/src/py/module_to_requi
 
 Directory
 ---------
-Assume that the code base lives in ``~/workspace/pqry/production/src/py`` and we are interested to bundle everything
+Assume that the code base lives in ``~/workspace/some-project`` and we are interested to bundle everything
 in ``pipeline/out`` directory.
 
 To determine the subset of the files and requirements, run the following command line:
@@ -120,8 +120,8 @@ To determine the subset of the files and requirements, run the following command
 .. code-block:: bash
 
     pypackagery \
-        --root_dir ~/workspace/pqry/production/src/py \
-        --initial_set ~/workspace/pqry/production/src/py/pipeline/out
+        --root_dir ~/workspace/some-project \
+        --initial_set ~/workspace/some-project/pipeline/out
 
 This gives us a verbose, human-readable output like:
 
@@ -135,17 +135,17 @@ This gives us a verbose, human-readable output like:
 
     Local dependencies:
     pipeline/out/__init__.py
-    pqry/__init__.py
-    pqry/logging.py
-    pqry/proc.py
+    common/__init__.py
+    common/logging.py
+    common/proc.py
 
 If we want to get the same output in JSON, we need to call:
 
 .. code-block:: bash
 
     pypackagery \
-        --root_dir ~/workspace/pqry/production/src/py \
-        --initial_set ~/workspace/pqry/production/src/py/pipeline/out \
+        --root_dir ~/workspace/some-project \
+        --initial_set ~/workspace/some-project/pipeline/out \
         --format json
 
 which gives us a JSON-encoded dependency graph:
@@ -165,25 +165,25 @@ which gives us a JSON-encoded dependency graph:
       },
       "rel_paths": [
         "pipeline/out/__init__.py",
-        "pqry/__init__.py",
-        "pqry/logging.py",
-        "pqry/proc.py"
+        "common/__init__.py",
+        "common/logging.py",
+        "common/proc.py"
       ],
       "unresolved_modules": []
     }
 
 Files
 -----
-Assume again that the code base lives in ``~/workspace/pqry/production/src/py``. We would like to get a subset of the
+Assume again that the code base lives in ``~/workspace/some-project``. We would like to get a subset of the
 code base required by a list of scripts. We need to specify the initial set as a list of files:
 
 .. code-block:: bash
 
     pypackagery \
-        --root_dir ~/workspace/pqry/production/src/py \
+        --root_dir ~/workspace/some-project \
         --initial_set \
-            ~/workspace/pqry/production/src/py/pipeline/input/receivery.py \
-            ~/workspace/pqry/production/src/py/pipeline/input/snapshotry.py
+            ~/workspace/some-project/pipeline/input/receivery.py \
+            ~/workspace/some-project/pipeline/input/snapshotry.py
 
 which gives us:
 
@@ -203,9 +203,9 @@ which gives us:
     pipeline/__init__.py
     pipeline/input/receivery.py
     pipeline/input/snapshotry.py
-    pqry/__init__.py
-    pqry/img.py
-    pqry/logging.py
+    common/__init__.py
+    common/img.py
+    common/logging.py
     protoed/__init__.py
     protoed/pipeline_pb2.py
 
