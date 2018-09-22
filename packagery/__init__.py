@@ -108,7 +108,8 @@ def parse_requirements(text: str, filename: str = '<unknown>') -> Mapping[str, R
     return result
 
 
-@icontract.post(lambda result: all(not key.endswith("\n") and not val.endswith("\n") for key, val in result.items()))
+@icontract.post(lambda result: all(not key.endswith("\n") for key in result.keys()))
+@icontract.post(lambda result: all(not val.endswith("\n") for val in result.values()))
 def parse_module_to_requirement(text: str, filename: str = '<unknown>') -> Mapping[str, str]:
     """
     Parse the correspondence between the modules and the pip packages given as tab-separated values.
