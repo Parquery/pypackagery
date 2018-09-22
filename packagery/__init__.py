@@ -17,9 +17,9 @@ from pypackagery_meta import __title__, __description__, __url__, __version__, _
     __license__, __copyright__  # pylint: disable=unused-import
 
 
-@icontract.pre(lambda initial_paths: all(pth.root != "" for pth in initial_paths))
+@icontract.pre(lambda initial_paths: all(pth.is_absolute() for pth in initial_paths))
 @icontract.post(lambda result: all(pth.is_file() for pth in result))
-@icontract.post(lambda result: all(pth.root != "" for pth in result))
+@icontract.post(lambda result: all(pth.is_absolute() for pth in result))
 @icontract.post(lambda initial_paths, result: len(result) >= len(initial_paths) if initial_paths else result == [])
 @icontract.post(
     lambda initial_paths, result: all(pth in result for pth in initial_paths if pth.is_file()),
@@ -210,7 +210,7 @@ class Package:
 _STDLIB_SET = set(stdlib_list.stdlib_list())
 
 
-@icontract.pre(lambda rel_paths: all(rel_pth.root == "" for rel_pth in rel_paths))
+@icontract.pre(lambda rel_paths: all(not rel_pth.is_absolute() for rel_pth in rel_paths))
 @icontract.post(
     lambda rel_paths, result: all(pth in result.rel_paths for pth in rel_paths),
     enabled=icontract.SLOW,
@@ -243,7 +243,7 @@ def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Pat
 
     while stack:
         rel_pth = stack.pop()
-        assert rel_pth.root == "", "All visited paths must be relative."
+        assert not rel_pth.is_absolute(), "All visited paths must be relative."
 
         len_rel_paths_before = len(package.rel_paths)
 
