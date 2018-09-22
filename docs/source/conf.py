@@ -14,10 +14,10 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))
 
 import pypackagery_meta
-
 
 # -- Project information -----------------------------------------------------
 
@@ -31,7 +31,6 @@ version = ''
 # The full version, including alpha/beta/rc tags
 release = pypackagery_meta.__version__
 
-
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -44,7 +43,8 @@ release = pypackagery_meta.__version__
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
-    'sphinx_autodoc_typehints'
+    'sphinx_autodoc_typehints',
+    'sphinx_icontract'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -73,7 +73,6 @@ exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
-
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -109,7 +108,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'pypackagerydoc'
 
-
 # -- Options for LaTeX output ------------------------------------------------
 
 latex_elements = {
@@ -134,26 +132,24 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 
-     '{}.tex'.format(project), 
+    (master_doc,
+     '{}.tex'.format(project),
      '{} Documentation'.format(project),
-     author, 
+     author,
      'manual'),
 ]
-
 
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 
-     project, 
+    (master_doc,
+     project,
      '{} Documentation'.format(project),
-     [author], 
+     [author],
      1)
 ]
-
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -165,7 +161,6 @@ texinfo_documents = [
      author, project, description,
      'Miscellaneous'),
 ]
-
 
 # -- Options for Epub output -------------------------------------------------
 
@@ -183,6 +178,5 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
-
 
 # -- Extension configuration -------------------------------------------------
