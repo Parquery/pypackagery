@@ -124,7 +124,8 @@ def parse_module_to_requirement(text: str, filename: str = '<unknown>') -> Mappi
 
     for i, row in enumerate(csv.reader(stream, dialect='excel-tab')):
         if len(row) != 2:
-            raise ValueError("Expected two columns, but got on line {} in {}: {}".format(i + 1, filename, row))
+            raise ValueError("Expected two columns, but got {} on line {} in {}: {}".format(
+                i + 1, len(row), filename, row))
 
         module_name, requirement_name = row
         result[module_name] = requirement_name

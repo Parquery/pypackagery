@@ -220,7 +220,8 @@ class TestParseModuleToRequirement(unittest.TestCase):
             value_error = err
 
         self.assertIsNotNone(value_error)
-        self.assertEqual("Expected two columns, but got on line 1 in <unknown>: ['PIL.Image pillow']", str(value_error))
+        self.assertEqual("Expected two columns, but got 1 on line 1 in <unknown>: ['PIL.Image pillow']",
+                         str(value_error))
 
 
 class TestMissingRequirements(unittest.TestCase):
