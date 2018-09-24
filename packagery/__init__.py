@@ -3,6 +3,7 @@ import csv
 import io
 import json
 import modulefinder
+import os
 import pathlib
 import sys
 from typing import List, Mapping, TextIO, Set, MutableMapping, cast, Any
@@ -13,8 +14,7 @@ import pkg_resources
 import requirements as requirements_parser
 import stdlib_list
 
-from pypackagery_meta import __title__, __description__, __url__, __version__, __author__, __author_email__, \
-    __license__, __copyright__  # pylint: disable=unused-import
+READTHEDOCS = os.environ.get("READTHEDOCS", None) is not None
 
 
 @icontract.pre(lambda initial_paths: all(pth.is_absolute() for pth in initial_paths))
@@ -24,7 +24,7 @@ from pypackagery_meta import __title__, __description__, __url__, __version__, _
 @icontract.post(
     lambda initial_paths, result: all(pth in result for pth in initial_paths if pth.is_file()),
     "Initial files also in result",
-    enabled=icontract.SLOW)
+    enabled=icontract.SLOW or READTHEDOCS)
 def resolve_initial_paths(initial_paths: List[pathlib.Path]) -> List[pathlib.Path]:
     """
     Resolve the initial paths of the dependency graph by recursively adding ``*.py`` files beneath given directories.
@@ -132,7 +132,7 @@ def parse_module_to_requirement(text: str, filename: str = '<unknown>') -> Mappi
     return result
 
 
-@icontract.post(lambda result: len(result) == len(set(result)), enabled=icontract.SLOW)
+@icontract.post(lambda result: len(result) == len(set(result)), enabled=icontract.SLOW or READTHEDOCS)
 def missing_requirements(module_to_requirement: Mapping[str, str],
                          requirements: Mapping[str, Requirement]) -> List[str]:
     """
@@ -214,14 +214,14 @@ _STDLIB_SET = set(stdlib_list.stdlib_list())
 @icontract.pre(lambda rel_paths: all(not rel_pth.is_absolute() for rel_pth in rel_paths))
 @icontract.post(
     lambda rel_paths, result: all(pth in result.rel_paths for pth in rel_paths),
-    enabled=icontract.SLOW,
+    enabled=icontract.SLOW or READTHEDOCS,
     description="Initial relative paths included")
 @icontract.post(
     lambda requirements, result: all(req.name in requirements for req in result.requirements.values()),
-    enabled=icontract.SLOW)
+    enabled=icontract.SLOW or READTHEDOCS)
 @icontract.pre(
     lambda requirements, module_to_requirement: missing_requirements(module_to_requirement, requirements) == [],
-    enabled=icontract.SLOW)
+    enabled=icontract.SLOW or READTHEDOCS)
 def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Path],
                              requirements: Mapping[str, Requirement],
                              module_to_requirement: Mapping[str, str]) -> Package:
