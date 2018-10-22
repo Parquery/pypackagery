@@ -42,7 +42,6 @@ setup(
         ]
     },
     py_modules=['packagery', 'pypackagery_meta'],
-    include_package_data=True,
     package_data={
         "packagery": ["py.typed"],
         '': ['LICENSE.txt', 'README.rst'],
