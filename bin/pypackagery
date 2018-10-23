@@ -72,7 +72,7 @@ def main() -> int:
         raise FileNotFoundError(("module_to_requirement.tsv expected beneath the root directory {}, "
                                  "but could not be found: {})".format(root_dir, module_to_requirement_tsv)))
 
-    requirements = packagery.parse_requirements(text=requirements_txt.read_text())
+    requirements = packagery.parse_requirements(text=requirements_txt.read_text(), filename=requirements_txt.as_posix())
 
     module_to_requirement = packagery.parse_module_to_requirement(
         text=module_to_requirement_tsv.read_text(), filename=module_to_requirement_tsv.as_posix())
