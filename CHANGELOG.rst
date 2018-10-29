@@ -1,3 +1,7 @@
+1.0.4
+=====
+* Updated to icontract 2.0.1
+
 1.0.3
 =====
 * Path to the ``requirements.txt`` included in the error message if unparsable
