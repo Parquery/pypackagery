@@ -418,7 +418,7 @@ class TestCollectDependencyGraph(unittest.TestCase):
                 [unresolved_module.__dict__ for unresolved_module in pkg.unresolved_modules])
 
 
-@icontract.post(
+@icontract.ensure(
     lambda result: len(result.requirements) > 0 and len(result.rel_paths) > 0 and len(result.unresolved_modules) > 0)
 def generate_package_with_local_pip_and_missing_deps() -> packagery.Package:  # pylint: disable=invalid-name
     with temppathlib.TemporaryDirectory() as tmp:
