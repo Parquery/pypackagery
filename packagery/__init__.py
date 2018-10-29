@@ -17,11 +17,11 @@ import stdlib_list
 READTHEDOCS = os.environ.get("READTHEDOCS", None) is not None
 
 
-@icontract.pre(lambda initial_paths: all(pth.is_absolute() for pth in initial_paths))
-@icontract.post(lambda result: all(pth.is_file() for pth in result))
-@icontract.post(lambda result: all(pth.is_absolute() for pth in result))
-@icontract.post(lambda initial_paths, result: len(result) >= len(initial_paths) if initial_paths else result == [])
-@icontract.post(
+@icontract.require(lambda initial_paths: all(pth.is_absolute() for pth in initial_paths))
+@icontract.ensure(lambda result: all(pth.is_file() for pth in result))
+@icontract.ensure(lambda result: all(pth.is_absolute() for pth in result))
+@icontract.ensure(lambda initial_paths, result: len(result) >= len(initial_paths) if initial_paths else result == [])
+@icontract.ensure(
     lambda initial_paths, result: all(pth in result for pth in initial_paths if pth.is_file()),
     "Initial files also in result",
     enabled=icontract.SLOW or READTHEDOCS)
@@ -55,8 +55,8 @@ def resolve_initial_paths(initial_paths: List[pathlib.Path]) -> List[pathlib.Pat
     return result
 
 
-@icontract.inv(lambda self: self.name.strip() == self.name)
-@icontract.inv(lambda self: self.line.endswith("\n"))
+@icontract.invariant(lambda self: self.name.strip() == self.name)
+@icontract.invariant(lambda self: self.line.endswith("\n"))
 class Requirement:
     """Represent a requirement in requirements.txt."""
 
@@ -79,7 +79,7 @@ class Requirement:
         return collections.OrderedDict([("name", self.name), ("line", self.line)])
 
 
-@icontract.post(lambda result: all(val.name == key for key, val in result.items()))
+@icontract.ensure(lambda result: all(val.name == key for key, val in result.items()))
 def parse_requirements(text: str, filename: str = '<unknown>') -> Mapping[str, Requirement]:
     """
     Parse requirements file and return package name -> package requirement as in requirements.txt.
@@ -108,8 +108,8 @@ def parse_requirements(text: str, filename: str = '<unknown>') -> Mapping[str, R
     return result
 
 
-@icontract.post(lambda result: all(not key.endswith("\n") for key in result.keys()))
-@icontract.post(lambda result: all(not val.endswith("\n") for val in result.values()))
+@icontract.ensure(lambda result: all(not key.endswith("\n") for key in result.keys()))
+@icontract.ensure(lambda result: all(not val.endswith("\n") for val in result.values()))
 def parse_module_to_requirement(text: str, filename: str = '<unknown>') -> Mapping[str, str]:
     """
     Parse the correspondence between the modules and the pip packages given as tab-separated values.
@@ -133,7 +133,7 @@ def parse_module_to_requirement(text: str, filename: str = '<unknown>') -> Mappi
     return result
 
 
-@icontract.post(lambda result: len(result) == len(set(result)), enabled=icontract.SLOW or READTHEDOCS)
+@icontract.ensure(lambda result: len(result) == len(set(result)), enabled=icontract.SLOW or READTHEDOCS)
 def missing_requirements(module_to_requirement: Mapping[str, str],
                          requirements: Mapping[str, Requirement]) -> List[str]:
     """
@@ -212,15 +212,15 @@ class Package:
 _STDLIB_SET = set(stdlib_list.stdlib_list())
 
 
-@icontract.pre(lambda rel_paths: all(not rel_pth.is_absolute() for rel_pth in rel_paths))
-@icontract.post(
+@icontract.require(lambda rel_paths: all(not rel_pth.is_absolute() for rel_pth in rel_paths))
+@icontract.ensure(
     lambda rel_paths, result: all(pth in result.rel_paths for pth in rel_paths),
     enabled=icontract.SLOW or READTHEDOCS,
     description="Initial relative paths included")
-@icontract.post(
+@icontract.ensure(
     lambda requirements, result: all(req.name in requirements for req in result.requirements.values()),
     enabled=icontract.SLOW or READTHEDOCS)
-@icontract.pre(
+@icontract.require(
     lambda requirements, module_to_requirement: missing_requirements(module_to_requirement, requirements) == [],
     enabled=icontract.SLOW or READTHEDOCS)
 def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Path],
@@ -293,9 +293,9 @@ def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Pat
     return package
 
 
-@icontract.pre(lambda table: not table or all(len(row) == len(table[0]) for row in table))
-@icontract.post(lambda table, result: result == "" if not table else True)
-@icontract.post(lambda result: not result.endswith("\n"))
+@icontract.require(lambda table: not table or all(len(row) == len(table[0]) for row in table))
+@icontract.ensure(lambda table, result: result == "" if not table else True)
+@icontract.ensure(lambda result: not result.endswith("\n"))
 def _format_table(table: List[List[str]]) -> str:
     """
     Format the table as equal-spaced columns.
@@ -367,7 +367,7 @@ def _output_verbose(package: Package, out: TextIO = sys.stdout) -> None:
 FORMATS = ['verbose', 'json']
 
 
-@icontract.pre(lambda a_format: a_format in FORMATS if a_format is not None else True)
+@icontract.require(lambda a_format: a_format in FORMATS if a_format is not None else True)
 def output(package: Package, out: TextIO = sys.stdout, a_format: str = 'verbose') -> None:
     """
     Output the dependency graph in the given format.

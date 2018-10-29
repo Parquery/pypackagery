@@ -33,7 +33,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     scripts=['bin/pypackagery'],
     install_requires=[
-        'asttokens>=1.1.11,<2', 'icontract>=1.5.3,<2', 'stdlib_list>=0.4.0,<1', 'requirements-parser>=0.2.0,<1'
+        'asttokens>=1.1.11,<2', 'icontract>=2.0.1,<3', 'stdlib_list>=0.4.0,<1', 'requirements-parser>=0.2.0,<1'
     ],
     extras_require={
         'dev': [
