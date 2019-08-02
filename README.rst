@@ -20,7 +20,7 @@ pypackagery
     :target: https://pypackagery.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-Pypackagery packages a subset of a monorepo and determine the dependent packages.
+Pypackagery packages a subset of a monorepo and determines the dependent packages.
 
 Given a root directory of a Python code base, a list of Python files (from that code base) and a target directory,
 pypackagery determines the dependent modules of the specified files. The scripts and the *local* dependencies are copied
