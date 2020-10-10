@@ -32,16 +32,15 @@ setup(
     keywords='package monorepo requirements',
     packages=find_packages(exclude=['tests']),
     scripts=['bin/pypackagery'],
-    install_requires=[
-        'asttokens>=1.1.11,<2', 'icontract>=2.0.1,<3', 'stdlib_list>=0.4.0,<1', 'requirements-parser>=0.2.0,<1'
-    ],
+    install_requires=['icontract>=2.0.1,<3', 'stdlib_list>=0.4.0,<1', 'requirements-parser>=0.2.0,<1'],
     extras_require={
         'dev': [
-            'mypy==0.620', 'pylint==1.8.2', 'yapf==0.20.2', 'tox>=3.0.0', 'temppathlib>=1.0.3,<2', 'coverage>=4.5.1,<5',
+            'mypy==0.790', 'pylint==2.6.0', 'yapf==0.20.2', 'tox>=3.0.0', 'temppathlib>=1.0.3,<2', 'coverage>=4.5.1,<5',
             'pydocstyle>=2.1.1,<3'
         ]
     },
     py_modules=['packagery', 'pypackagery_meta'],
+    entry_points={"console_scripts": ["pypackagery = packagery.main:main"]},
     package_data={
         "packagery": ["py.typed"],
         '': ['LICENSE.txt', 'README.rst'],
