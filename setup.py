@@ -31,7 +31,6 @@ setup(
     license='License :: OSI Approved :: MIT License',
     keywords='package monorepo requirements',
     packages=find_packages(exclude=['tests']),
-    scripts=['bin/pypackagery'],
     install_requires=['icontract>=2.0.1,<3', 'stdlib_list>=0.4.0,<1', 'requirements-parser>=0.2.0,<1'],
     extras_require={
         'dev': [
