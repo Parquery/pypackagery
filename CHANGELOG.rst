@@ -1,3 +1,8 @@
+1.0.5
+=====
+* Added support for Windows
+* Added support for Python 3.7 and 3.8
+
 1.0.4
 =====
 * Updated to icontract 2.0.1
