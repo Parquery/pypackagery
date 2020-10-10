@@ -28,26 +28,23 @@ def main() -> int:
     if overwrite:
         subprocess.check_call(
             [
-                "yapf", "--in-place", "--style=style.yapf", "--recursive", "tests", "packagery", "bin", "setup.py",
+                "yapf", "--in-place", "--style=style.yapf", "--recursive", "tests", "packagery", "setup.py",
                 "precommit.py"
             ],
             cwd=str(repo_root))
     else:
         subprocess.check_call(
-            [
-                "yapf", "--diff", "--style=style.yapf", "--recursive", "tests", "packagery", "bin", "setup.py",
-                "precommit.py"
-            ],
+            ["yapf", "--diff", "--style=style.yapf", "--recursive", "tests", "packagery", "setup.py", "precommit.py"],
             cwd=str(repo_root))
 
     print("Mypy'ing...")
-    subprocess.check_call(["mypy", "packagery", "tests", "bin/pypackagery"], cwd=str(repo_root))
+    subprocess.check_call(["mypy", "packagery", "tests"], cwd=str(repo_root))
 
     print("Pylint'ing...")
-    subprocess.check_call(["pylint", "--rcfile=pylint.rc", "tests", "packagery", "bin"], cwd=str(repo_root))
+    subprocess.check_call(["pylint", "--rcfile=pylint.rc", "tests", "packagery"], cwd=str(repo_root))
 
     print("Pydocstyle'ing...")
-    subprocess.check_call(["pydocstyle", "packagery", "bin"], cwd=str(repo_root))
+    subprocess.check_call(["pydocstyle", "packagery"], cwd=str(repo_root))
 
     print("Testing...")
     env = os.environ.copy()

@@ -1,1 +1,1 @@
-"""Test pypackagery."""
+"""Test packagery."""
