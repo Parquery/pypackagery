@@ -11,9 +11,8 @@ import pypackagery_meta
 
 
 def main() -> int:
-    """
-    Execute the main routine.
-    """
+    """Execute the main routine."""
+    # pylint: disable=too-many-locals
     parser = argparse.ArgumentParser(description=pypackagery_meta.__description__)
     parser.add_argument("--root_dir", help="Root directory of the Python files in the monorepo", required=True)
     parser.add_argument(
@@ -40,7 +39,7 @@ def main() -> int:
     args = parser.parse_args()
 
     root_dir = pathlib.Path(args.root_dir).absolute()
-    format = str(args.format)
+    fmt = str(args.format)
     dont_panic = bool(args.dont_panic)
     output_path = None if not args.output_path else pathlib.Path(args.output_path)
 
@@ -91,10 +90,10 @@ def main() -> int:
         root_dir=root_dir, rel_paths=rel_pths, requirements=requirements, module_to_requirement=module_to_requirement)
 
     if output_path is None:
-        packagery.output(package=pkg, a_format=format)
+        packagery.output(package=pkg, a_format=fmt)
     else:
         with output_path.open('w') as fid:
-            packagery.output(package=pkg, out=fid, a_format=format)
+            packagery.output(package=pkg, out=fid, a_format=fmt)
 
     if not dont_panic and len(pkg.unresolved_modules) > 0:
         return 1

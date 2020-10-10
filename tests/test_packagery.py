@@ -247,8 +247,8 @@ class TestModuleFinder(unittest.TestCase):
             script_pth = tmp.path / "some_script.py"
             script_pth.write_text("#!/usr/bin/env python\n" "import os.path\n" "import os.path\n")
 
-            mfder = modulefinder.ModuleFinder(path=[tmp.path.as_posix()])
-            mfder.load_file(pathname=script_pth.as_posix())
+            mfder = modulefinder.ModuleFinder(path=[str(tmp.path)])
+            mfder.load_file(pathname=str(script_pth))
 
             bad_modules = sorted(mfder.badmodules.keys())
             modules = sorted(mfder.modules.keys())

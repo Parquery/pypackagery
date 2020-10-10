@@ -22,7 +22,7 @@ READTHEDOCS = os.environ.get("READTHEDOCS", None) is not None
 @icontract.ensure(lambda result: all(pth.is_absolute() for pth in result))
 @icontract.ensure(lambda initial_paths, result: len(result) >= len(initial_paths) if initial_paths else result == [])
 @icontract.ensure(
-    lambda initial_paths, result: all(pth in result for pth in initial_paths if pth.is_file()),
+    lambda initial_paths, result: all(pth in result for pth in initial_paths if pth.is_file()),  # pylint: disable=undefined-variable
     "Initial files also in result",
     enabled=icontract.SLOW or READTHEDOCS)
 def resolve_initial_paths(initial_paths: List[pathlib.Path]) -> List[pathlib.Path]:
@@ -173,7 +173,7 @@ class UnresolvedModule:
 
     def to_mapping(self) -> Mapping[str, Any]:
         """Represent the unresolved module as a mapping that can be directly converted to JSON and similar formats."""
-        return collections.OrderedDict([("name", self.name), ("imported_from", self.imported_from.as_posix())])
+        return collections.OrderedDict([("name", self.name), ("imported_from", str(self.imported_from))])
 
 
 class Package:
@@ -201,7 +201,7 @@ class Package:
         result = collections.OrderedDict([
             ("requirements",
              collections.OrderedDict((key, req.to_mapping()) for key, req in sorted(self.requirements.items()))),
-            ("rel_paths", sorted(rel_pth.as_posix() for rel_pth in self.rel_paths)),
+            ("rel_paths", sorted(str(rel_pth) for rel_pth in self.rel_paths)),
             ("unresolved_modules", [mod.to_mapping() for mod in self.unresolved_modules])
         ])
         # yapf: enable
@@ -255,8 +255,8 @@ def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Pat
 
         pth = root_dir / rel_pth
 
-        mfder = modulefinder.ModuleFinder(path=[root_dir.as_posix()])
-        mfder.load_file(pathname=pth.as_posix())
+        mfder = modulefinder.ModuleFinder(path=[str(root_dir)])
+        mfder.load_file(pathname=str(pth))
 
         for module_name in mfder.badmodules:
             if module_name in module_to_requirement:
@@ -275,7 +275,7 @@ def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Pat
                     package.unresolved_modules.append(UnresolvedModule(name=module_name, importer_rel_path=rel_pth))
 
         for module_name, module in mfder.modules.items():
-            if module.__file__ is None:
+            if module.__file__ is None:  # type: ignore
                 # Some of the standard library modules may have __file__ unset. Just ignore them, but panic for all the
                 # other modules.
                 if module_name not in _STDLIB_SET:
@@ -283,7 +283,7 @@ def collect_dependency_graph(root_dir: pathlib.Path, rel_paths: List[pathlib.Pat
                         "Expected the module found through modulefiner to have a __file__, but it is None: {}".format(
                             module))
             else:
-                module_rel_pth = pathlib.Path(module.__file__).relative_to(root_dir)
+                module_rel_pth = pathlib.Path(module.__file__).relative_to(root_dir)  # type: ignore
                 stack.append(module_rel_pth)
 
                 package.rel_paths.add(rel_pth)
@@ -356,7 +356,7 @@ def _output_verbose(package: Package, out: TextIO = sys.stdout) -> None:
     if package.unresolved_modules:
         table = [["Module", "Imported from"]]
         for mod in sorted(package.unresolved_modules, key=lambda mod: mod.name):
-            table.append([mod.name, mod.imported_from.as_posix()])
+            table.append([mod.name, str(mod.imported_from)])
 
         blocks.append("Unresolved dependencies:\n{}".format(_format_table(table=table)))
 
